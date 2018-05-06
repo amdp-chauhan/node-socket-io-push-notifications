@@ -1,0 +1,13 @@
+node_modules/
+
+.env
+
+scripts/**
+!scripts/env.template.sh
+
+.webpack/
+*-function.json
+
+api/docs/
+api/code/
+

@@ -1,0 +1,493 @@
+swagger: '2.0'
+info:
+  description: ''
+  version: 1.0.0
+  title: API
+  termsOfService: ''
+  contact:
+    email: ''
+host: localhost
+basePath: /api
+schemes:
+  - https
+paths:
+  /referral-info:
+    get:
+      tags:
+        - Referral info
+      summary: Referral info for user
+      description: Referral info for specific user
+      operationId: referralInfo
+      produces:
+        - application/xml
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              referralCode:
+                type: string
+              referredUsers:
+                type: array
+                items:
+                  $ref: '#/definitions/ReferralInfo'
+              referring:
+                $ref: '#/definitions/ReferralInfo'
+        '500':
+          description: Some server error
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+              error:
+                type: string
+    post:
+      tags:
+        - Referral info
+      summary: Add a new referred user to the store
+      description: ''
+      operationId: addReferred
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          description: Referral Code
+          name: code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              referralCode:
+                type: string
+              referredUsers:
+                type: array
+                items:
+                  $ref: '#/definitions/ReferralInfo'
+              referring:
+                $ref: '#/definitions/ReferralInfo'
+        '405':
+          description: Invalid input
+  /referral-info/event:
+    post:
+      tags:
+        - Referral info
+      summary: Log referral info event
+      description: Log Referral info event for specific uid
+      operationId: logReferralInfoEvent
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          description: Referral Event
+          name: event
+          required: true
+          schema:
+            $ref: '#/definitions/ReferralEvent'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+              total:
+                type: number
+              eventType:
+                type: string
+        '500':
+          description: Some server error
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+              error:
+                type: string
+      security:
+        - secret_key:
+            - 'write:secretKey'
+            - 'read:secretKey'
+  /app-user:
+    get:
+      tags:
+        - App User
+      summary: Get user info
+      description: Get info for current user
+      operationId: appUser
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+              isNew:
+                type: boolean
+              user:
+                $ref: '#/definitions/AppUser'
+        '405':
+          description: Invalid input
+    put:
+      tags:
+        - App User
+      summary: Update user info
+      description: Update current user info
+      operationId: updateAppUser
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          description: App User info
+          name: user
+          required: true
+          schema:
+            $ref: '#/definitions/AppUser'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+              user:
+                $ref: '#/definitions/AppUser'
+        '405':
+          description: Invalid input
+    delete:
+      tags:
+        - App User
+      summary: Delete user
+      description: Delete current user
+      operationId: deleteAppUser
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/xml
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+        '405':
+          description: Invalid input
+  /phone-verification/sent:
+    post:
+      tags:
+        - Phone Verification
+      summary: Send verification code
+      description: Sent verification code in specified phone number
+      operationId: phoneVerification
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: request
+          description: Required request parameters
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/PhoneVerification'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+              sid:
+                type: string
+        '500':
+          description: Some server error
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+                default: false
+              error:
+                type: string
+  /phone-verification/validate:
+    post:
+      tags:
+        - Phone Verification
+      summary: Validate verification code
+      description: Validate verification code sent on phone
+      operationId: verificationCodeValidation
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: request
+          description: Required request parameters
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/VerificationCodeValidation'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+        '500':
+          description: Some server error
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+                default: false
+              error:
+                type: string
+  /push-notification/add-subscriber:
+    post:
+      tags:
+        - Push Notification
+      summary: Add Subscriber
+      description: 'Will add a subscriber, who will later receive the push notifications'
+      operationId: addSubscriber
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: request
+          description: Required request parameters
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/AddSubscriber'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+        '500':
+          description: Some server error
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+                default: false
+              error:
+                type: string
+  /push-notification/send:
+    post:
+      tags:
+        - Push Notification
+      summary: Send Message
+      description: Will validate passed 'toSubscriberId' and push a notification for same
+      operationId: sendPushNotificationMessage
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - name: request
+          description: Required request parameters
+          required: true
+          in: body
+          schema:
+            $ref: '#/definitions/SendPushNotificationMessage'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+        '500':
+          description: Some server error
+          schema:
+            type: object
+            properties:
+              result:
+                type: boolean
+                default: false
+              error:
+                type: string
+definitions:
+  AppUser:
+    type: object
+    properties:
+      uid:
+        type: string
+      displayName:
+        type: string
+      userAvatarHash:
+        type: string
+      email:
+        type: string
+      emailVerified:
+        type: boolean
+      phoneNumber:
+        type: string
+      photoURL:
+        type: string
+      wallet:
+        type: string
+      isWalletUpdated:
+        type: string
+        default: false
+      isRated:
+        type: string
+        default: false
+      level:
+        type: number
+        format: int32
+    xml:
+      name: AppUser
+  ReferralInfo:
+    type: object
+    properties:
+      id:
+        type: string
+      referralId:
+        type: string
+      progress:
+        type: object
+        properties:
+          current:
+            type: integer
+            format: int32
+          max:
+            type: integer
+            format: int32
+      date:
+        type: number
+        format: int32
+      complete:
+        type: boolean
+        default: false
+    xml:
+      name: ReferralInfo
+  ReferralEvent:
+    type: object
+    properties:
+      referralCode:
+        type: string
+      eventType:
+        type: string
+      timeStamp:
+        type: number
+        format: int32
+    xml:
+      name: ReferralInfo
+  DataSource:
+    type: object
+    properties:
+      uid:
+        type: string
+      id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      isEnabled:
+        type: boolean
+        default: false
+      lastUpdate:
+        type: number
+        format: int32
+    xml:
+      name: DataSource
+  DataSourceModel:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      isEnabled:
+        type: boolean
+        default: false
+      isAvailable:
+        type: boolean
+        default: false
+    xml:
+      name: DataSourceModel
+  PhoneVerification:
+    type: object
+    properties:
+      uid:
+        type: string
+    xml:
+      name: PhoneVerification
+  VerificationCodeValidation:
+    type: object
+    properties:
+      uid:
+        type: string
+      verificationCode:
+        type: string
+    xml:
+      name: VerificationCodeValidation
+  AddSubscriber:
+    type: object
+    properties:
+      subscriberIds:
+        type: array
+        items:
+          type: string
+          description: List of subscribers
+    xml:
+      name: AddSubscriber
+  SendPushNotificationMessage:
+    type: object
+    properties:
+      toSubscriberId:
+        type: string
+        example: '12345'
+        description: Receipient subscriber's Id
+      event:
+        type: string
+        example: simpleMessage
+      data:
+        type: string
+        example: any sample data
+    xml:
+      name: AddSubscriber

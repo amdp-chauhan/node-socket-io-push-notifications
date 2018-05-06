@@ -1,0 +1,52 @@
+{
+  "name": "my-server",
+  "version": "1.0.0",
+  "description": "Server",
+  "main": "",
+  "scripts": {
+    "start": "node ./api/server.js",
+    "clean": "npm run sls:clean && npm run api:clean",
+    "sls:clean": "rm -rf .webpack .serverless ./*-function.json",
+    "sls:pack": "npm run sls:clean && sls package",
+    "api:code": "snc ./api/swagger.yml -o ./api/code",
+    "api:docs": "spectacle -d ./api/swagger.yml -t ./api/docs",
+    "api:clean": "rm -rf ./api/code ./api/docs",
+    "sendgrid:import": "node cli/index.js --action sendgrid:import",
+    "geolocation:import": "node cli/index.js --action geolocation:import",
+    "datasources:import": "node cli/index.js --action datasources:import"
+  },
+  "author": {
+    "name": "Team"
+  },
+  "engines": {
+    "node": ">=8.9.4"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
+    "ejs": "^2.5.9",
+    "express": "^4.16.2",
+    "express-socket.io": "^1.0.3",
+    "firebase-admin": "^5.12.0",
+    "lodash": "^4.17.5",
+    "moment": "^2.21.0",
+    "mongoose": "^5.0.11",
+    "node-persist": "^3.0.0",
+    "node-rest-client": "^3.1.0",
+    "path": "^0.12.7",
+    "shortid": "^2.2.8",
+    "socket.io": "^2.1.0",
+    "twilio": "^3.15.1"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.7",
+    "minimist": "^1.2.0",
+    "serverless-azure-functions": "^0.5.0",
+    "serverless-webpack": "^5.1.1",
+    "spectacle-docs": "^1.0.2",
+    "swagger-node-codegen": "^1.2.0"
+  }
+}

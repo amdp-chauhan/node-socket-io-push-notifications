@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>REST Server Home</title>
+</head>
+
+<body>
+
+    <h2>Imaginary Client 1 - </h2>
+    <h4>SubscriberId - 12345 </h4>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>  
+        var socket = io.connect('http://localhost:3000/12345', {
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax : 5000,
+            reconnectionAttempts: Infinity
+        });
+
+        socket.on('connect', function() {
+            console.log(":: CONNECTED 12345")
+            socket.on('simpleMessage', function(data) {
+                console.log(":: Received Message - ",data);
+            })
+        });
+
+        socket.on('disconnect', function(data) {
+            console.log("Socket Disconnected.");
+        });
+    </script>
+</body>
+
+</html>
